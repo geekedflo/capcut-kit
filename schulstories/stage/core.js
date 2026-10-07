@@ -86,13 +86,14 @@ function buildCaptionChunks() {
   });
 }
 
-function captions(t, y = 1265) {
+function captions(t, y) {
+  y = y || 1265;
   const c = CHUNKS.find(c => t >= c.t0 && t < c.t1);
   if (!c) return '';
   const size = 76, gap = 40;
   const hiColor = VOICE_COLOR[c.beat.voice] || '#FFE03A';
   const ws = c.words.map(w => ({ ...w, size: w.hi ? size * 1.12 : size }));
-  ws.forEach(w => (w.width = textW(w.w, w.size)));
+  ws.forEach(w => (w.width = textW(w.w, w.size) * 1.08));
   let total = ws.reduce((a, w) => a + w.width, 0) + gap * (ws.length - 1);
   const k = Math.min(1, 960 / total);
   const pop = Ease.outBack(prog(t, c.t0, c.t0 + 0.14));

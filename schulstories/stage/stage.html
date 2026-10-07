@@ -6,6 +6,7 @@
   @font-face { font-family: 'Luckiest Guy'; src: url(../fonts/luckiest-guy-latin-400-normal.woff2); }
   @font-face { font-family: 'Fredoka'; font-weight: 700; src: url(../fonts/fredoka-latin-700-normal.woff2); }
   @font-face { font-family: 'Inter'; font-weight: 900; src: url(../fonts/Inter-Black.otf); }
+  @font-face { font-family: 'Inter'; font-weight: 400; src: url(../fonts/Inter-Regular.otf); }
   html, body { margin: 0; background: #000; overflow: hidden; }
 </style>
 </head>
@@ -14,6 +15,7 @@
 <script src="core.js"></script>
 <script src="characters.js"></script>
 <script src="backgrounds.js"></script>
+<script src="youth.js"></script>
 <script>document.write('<script src="' + new URLSearchParams(location.search).get('ep') + '.js"><\/script>');</script>
 <script>
 function shotAt(t) {
@@ -36,6 +38,9 @@ function renderFrame(t) {
     <linearGradient id="redglow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF2A4A" stop-opacity="0"/><stop offset="1" stop-color="#FF2A4A" stop-opacity="0.8"/></linearGradient>
     <filter id="blurx" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="${f1(blur)} 0"/></filter>
     <radialGradient id="spot" cx="50%" cy="40%" r="50%"><stop offset="0" stop-color="#FFE7C2" stop-opacity="0.55"/><stop offset="1" stop-color="#FFE7C2" stop-opacity="0"/></radialGradient>
+    <linearGradient id="ledglow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C46BFF" stop-opacity="0.45"/><stop offset="1" stop-color="#C46BFF" stop-opacity="0"/></linearGradient>
+    <linearGradient id="topfade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0.55"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
+    <filter id="mute"><feColorMatrix type="saturate" values="0.42"/><feComponentTransfer><feFuncR type="linear" slope="0.88"/><feFuncG type="linear" slope="0.88"/><feFuncB type="linear" slope="0.92"/></feComponentTransfer></filter>
     <filter id="gray"><feColorMatrix type="saturate" values="0.12"/></filter>
   </defs>
   <rect width="${W}" height="${H}" fill="#000"/>`;
@@ -46,7 +51,7 @@ function renderFrame(t) {
   if (r.flash) svg += `<rect width="${W}" height="${H}" fill="#fff" opacity="${clamp(r.flash).toFixed(3)}"/>`;
   if (r.screen) svg += r.screen;
   svg += episodeOverlays(t);
-  svg += captions(t);
+  svg += captions(t, r.capY);
   svg += '</svg>';
   document.getElementById('root').innerHTML = svg;
 }

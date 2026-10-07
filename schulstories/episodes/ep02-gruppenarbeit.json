@@ -1,0 +1,29 @@
+{
+  "title": "Gruppenarbeit",
+  "hook": "Ich mach die GANZE Gruppenarbeit\nallein und krieg die\nschlechteste Note 💀",
+  "outro": "Markier den Jonas aus deiner Gruppe 👇",
+  "music": [["hook", "noten"], ["emre", "end"]],
+  "music_style": "trap",
+  "music_gain": 0.17,
+  "beats": [
+    {"id": "hook", "voice": "toni2", "text": "Ich hab die komplette Gruppenarbeit alleine gemacht.", "gap": 0.1},
+    {"id": "hook2", "voice": "toni2", "text": "Und die *schlechteste* Note bekommen.", "gap": 0.35, "sfx": [["boom", "start", 0.55]]},
+    {"id": "chat", "voice": "toni2", "text": "Gruppenchat.", "gap": 0.15, "sfx": [["whoosh", "start", -0.2]]},
+    {"id": "chat2", "voice": "toni2", "text": "Jonas: „Ich mach die Titelfolie.“", "say": "Jonas: Ich mach die Titelfolie.", "gap": 0.15, "sfx": [["msg", "start", 0.0]]},
+    {"id": "chat3", "voice": "toni2", "text": "Lena bringt Kekse mit.", "gap": 0.15, "sfx": [["msg", "start", 0.0]]},
+    {"id": "chat4", "voice": "toni2", "text": "Emre hat's gelesen. Vor *drei Wochen.*", "say": "Emre hat es gelesen. Vor drei Wochen.", "gap": 0.35},
+    {"id": "nacht", "voice": "toni2", "text": "Also ich: Recherche, 24 Folien, Handout.", "say": "Also ich: Recherche, vierundzwanzig Folien, Handout.", "gap": 0.1, "sfx": [["whoosh", "start", -0.2]]},
+    {"id": "nacht2", "voice": "toni2", "text": "Digga, bis *drei Uhr* nachts.", "gap": 0.35},
+    {"id": "krank", "voice": "toni2", "text": "Präsentationstag. Emre: „Bin krank.“", "say": "Präsentationstag. Emre: Bin krank.", "gap": 0.15, "sfx": [["msg", "end", -0.6]]},
+    {"id": "krank2", "voice": "toni2", "text": "Seine Story von heute: *Freibad.*", "gap": 0.4, "sfx": [["scratch", "end", -0.25], ["boom", "end", 0.05]]},
+    {"id": "jonas", "voice": "toni2", "text": "Jonas liest seine Folie vor.", "gap": 0.1},
+    {"id": "jonas2", "voice": "toni2", "text": "Es ist die Titelfolie. Er liest sie *falsch.*", "gap": 0.15},
+    {"id": "jonas3", "voice": "jonas", "text": "Foto… Sünde… se.", "say": "Foto. Sünde. Se.", "gap": 0.4, "sfx": [["boom", "end", 0.1]]},
+    {"id": "frage", "voice": "toni2", "text": "Dann kommt eine Frage. Alle gucken mich an.", "gap": 0.1, "sfx": [["whoosh", "start", 1.3]]},
+    {"id": "frage2", "voice": "toni2", "text": "Ich beantworte alles.", "gap": 0.35},
+    {"id": "noten", "voice": "krause", "text": "Jonas, Lena: Eins. Schöne Titelfolie.", "gap": 0.2, "sfx": [["stamp", "start", 0.7], ["stamp", "start", 0.9]]},
+    {"id": "noten2", "voice": "krause", "text": "Toni: Drei. Du hast deine Gruppe nicht einbezogen.", "gap": 0.25, "sfx": [["stamp", "start", 0.6], ["boom", "start", 0.6]]},
+    {"id": "emre", "voice": "toni2", "text": "Emre hat auch 'ne Eins. Er war im *Freibad.*", "say": "Emre hat auch ne Eins. Er war im Freibad.", "gap": 0.3, "sfx": [["stamp", "start", 0.3]]},
+    {"id": "end", "hold": 2.2}
+  ]
+}

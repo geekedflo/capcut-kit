@@ -7,7 +7,7 @@ mit Wort-Hervorhebung. Es fallen keine KI-Credits an, und die Figuren sehen in j
 
 ```
 ./setup.sh              # einmalig: Stimmen + Python-Umgebung
-./make.sh ep01-mama     # -> out/ep01-mama.mp4 (ca. 1 Minute Renderzeit)
+./make.sh ep02-gruppenarbeit   # -> out/ep02-gruppenarbeit.mp4 (ca. 1 Minute Renderzeit)
 node render.mjs ep01-mama --stills 1.0,5.3   # einzelne Standbilder zum Prüfen
 ```
 
@@ -20,7 +20,8 @@ Voraussetzungen: `uv`, `node` + `playwright` (mit Chromium), `ffmpeg` (mit `rubb
 | `episodes/epXX-*.json` | Drehbuch: Sätze (`beats`), Sprecher, Pausen, Soundeffekte, Hook-Text, Musik-Abschnitte |
 | `build_audio.py` | Sprachausgabe (Piper/sherpa-onnx), Lippen-Sync-Kurven, Wort-Timings, Soundeffekte, Musik, Lautheit −14 LUFS |
 | `stage/core.js` | Easing, Kamera, Untertitel, Hook-Karte |
-| `stage/characters.js` | Toni, Mitschüler, Frau Krause, Hausmeister, Uhr, Tische |
+| `stage/characters.js` | Kinder-Look (Folge 1): Toni, Mitschüler, Frau Krause, Hausmeister, Uhr, Tische |
+| `stage/youth.js` | Jugend-Look (ab Folge 2): Teens mit Streetwear, Chat-, Story- und Notenlisten-Grafiken |
 | `stage/backgrounds.js` | Klassenzimmer, Tafel, Flur |
 | `stage/epXX.js` | Regie der Folge: Einstellungen, Kamerafahrten, Gags |
 | `render.mjs` | rendert jedes Bild in Chromium und baut mit ffmpeg das MP4 |

@@ -21,6 +21,9 @@ VOICES = {
     "toni_panic":   ("thorsten_emotional-medium", 6, 1.22, 1.17),
     "krause":       ("kerstin-low", 0, 0.92, 1.02),
     "janitor":      ("thorsten-high", 0, 0.95, 0.84),
+    # youth style (ep02+): natural pitch, faster delivery
+    "toni2":        ("thorsten-high", 0, 1.16, 1.03),
+    "jonas":        ("thorsten_emotional-medium", 5, 0.85, 1.12),
 }
 
 _tts = {}
@@ -288,11 +291,45 @@ def sfx_rimshot():
     return 0.8 * total / np.abs(total).max()
 
 
+def sfx_boom():
+    """meme bass boom: low sine drop, saturated, long tail"""
+    n = int(1.6 * SR)
+    t = np.arange(n) / SR
+    f = 42 + 70 * np.exp(-t / 0.05)
+    y = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t / 0.45)
+    y = np.tanh(3.5 * y) / np.tanh(3.5)
+    click = rng.standard_normal(int(0.01 * SR)) * 0.4
+    y[: len(click)] += click
+    return 0.95 * y
+
+
+def sfx_msg():
+    """message notification: two quick soft tones"""
+    out = np.zeros(int(0.3 * SR))
+    for at, f in [(0.0, 1320), (0.09, 1760)]:
+        n = int(0.14 * SR)
+        t = np.arange(n) / SR
+        tone = (np.sin(2 * np.pi * f * t) + 0.3 * np.sin(4 * np.pi * f * t)) * np.exp(-t / 0.04)
+        i = int(at * SR)
+        out[i:i + n] += tone
+    return 0.35 * out
+
+
+def sfx_stamp():
+    """grade stamp: thud + paper slap"""
+    n = int(0.35 * SR)
+    t = np.arange(n) / SR
+    thud = np.sin(2 * np.pi * np.cumsum(90 + 120 * np.exp(-t / 0.02)) / SR) * np.exp(-t / 0.07)
+    slap = rng.standard_normal(n) * np.exp(-t / 0.015)
+    slap -= onepole_lp(slap, 900)
+    return 0.8 * (thud + 0.5 * slap) / 1.3
+
+
 SFX = {
     "whoosh": (sfx_whoosh, 0.45), "pop": (sfx_pop, 0.55), "boing": (sfx_boing, 0.45),
     "thunder": (sfx_thunder, 0.6), "dundun": (sfx_dundun, 0.45), "scratch": (sfx_scratch, 0.55),
     "cricket": (sfx_cricket, 0.6), "tick": (sfx_tick, 0.5), "ding": (sfx_ding, 0.45),
-    "rimshot": (sfx_rimshot, 0.6),
+    "rimshot": (sfx_rimshot, 0.6), "boom": (sfx_boom, 0.7), "msg": (sfx_msg, 0.5), "stamp": (sfx_stamp, 0.6),
 }
 
 
@@ -344,6 +381,54 @@ def music(dur, bpm=112):
     return y / np.abs(y).max()
 
 
+def cowbell(freq, dur=0.16):
+    n = int(dur * SR)
+    t = np.arange(n) / SR
+    sq = lambda f: np.sign(np.sin(2 * np.pi * f * t))
+    y = sq(freq) + sq(freq * 1.48)
+    y = onepole_lp(y, 2800)
+    y -= onepole_lp(y, 500)
+    return y * np.exp(-t / 0.05)
+
+
+def music_trap(dur, bpm=140):
+    """half-time trap/phonk loop in F minor: 808s, claps, hats with rolls, cowbell riff"""
+    step = 60 / bpm / 4
+    y = np.zeros(int((dur + 3) * SR))
+    midi = lambda m: 440 * 2 ** ((m - 69) / 12)
+    add = lambda at, sig, g: y.__setitem__(slice(int(at * SR), int(at * SR) + len(sig)), y[int(at * SR):int(at * SR) + len(sig)] + g * sig)
+    bass = [[(0, 29, 6), (7, 29, 3), (10, 32, 6)], [(0, 25, 6), (8, 24, 4), (12, 27, 4)]]
+    bell = [65, 68, 72, 70, 68, 65, 63, 65]
+    bar, t0 = 0, 0.0
+    while t0 < dur:
+        for st, note, ln in bass[bar % 2]:
+            n = int(ln * step * SR)
+            tt = np.arange(n) / SR
+            f = midi(note) * (1 + np.exp(-tt / 0.03))
+            sig = np.tanh(2.5 * np.sin(2 * np.pi * np.cumsum(f) / SR)) * np.exp(-tt / (ln * step * 0.9))
+            add(t0 + st * step, sig, 0.55)
+            kn = int(0.16 * SR)
+            kt = np.arange(kn) / SR
+            add(t0 + st * step, np.sin(2 * np.pi * np.cumsum(50 + 110 * np.exp(-kt / 0.02)) / SR) * np.exp(-kt / 0.06), 0.5)
+        cn = int(0.22 * SR)
+        clap = rng.standard_normal(cn)
+        clap = onepole_lp(clap, 4000)
+        clap -= onepole_lp(clap, 900)
+        clap *= np.exp(-np.arange(cn) / (0.06 * SR))
+        add(t0 + 8 * step, clap, 0.9)
+        hats = list(range(0, 16, 2)) + ([13, 13.5, 14, 14.5, 15, 15.5] if bar % 2 else [])
+        for h in hats:
+            hn = int(0.03 * SR)
+            hat = rng.standard_normal(hn)
+            hat -= onepole_lp(hat, 7000)
+            add(t0 + h * step, hat * np.exp(-np.arange(hn) / (0.012 * SR)), 0.22)
+        for i, st in enumerate([0, 3, 6, 8, 10, 12, 14]):
+            add(t0 + st * step, cowbell(midi(bell[(i + bar * 3) % len(bell)])), 0.16)
+        t0 += 16 * step
+        bar += 1
+    return y / np.abs(y).max()
+
+
 # ---------------------------------------------------------------- build
 def main(ep_path):
     ep = json.load(open(ep_path))
@@ -384,7 +469,7 @@ def main(ep_path):
             seg = s[: n - i]
             fx[i:i + len(seg)] += gain * seg
     mus = np.zeros(n)
-    m = music(total)
+    m = music_trap(total) if ep.get("music_style") == "trap" else music(total)
     for a, z in ep.get("music", []):
         t0, t1 = byid[a]["start"], byid[z]["end"] if z != "end" else total
         i0, i1 = int(t0 * SR), int(t1 * SR)
@@ -395,12 +480,16 @@ def main(ep_path):
     # duck music under voice
     env = np.convolve(np.abs(voice), np.ones(int(0.15 * SR)) / int(0.15 * SR), mode="same")
     duck = 1 - 0.45 * np.clip(env / 0.05, 0, 1)
-    mix = 1.0 * voice + 0.75 * fx + 0.13 * mus * duck
+    mix = 1.0 * voice + 0.75 * fx + ep.get("music_gain", 0.13) * mus * duck
     mix /= np.abs(mix).max() / 0.95
     raw = os.path.join(outdir, "audio_raw.wav")
     sf.write(raw, mix.astype(np.float32), SR)
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", raw, "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-ar", str(SR),
-                    os.path.join(outdir, "audio.wav")], check=True)
+    # loudness: compress, measure, then gain to -14 LUFS with a true-peak limiter
+    pre = "acompressor=threshold=0.25:ratio=3:attack=5:release=120"
+    meas = subprocess.run(["ffmpeg", "-nostats", "-i", raw, "-af", pre + ",ebur128", "-f", "null", "-"], capture_output=True, text=True).stderr
+    lufs = float(re.findall(r"I:\s+(-?[\d.]+) LUFS", meas)[-1])
+    af = f"{pre},volume={-14 - lufs + 1.5:.2f}dB,alimiter=limit=0.75:attack=2:release=60:level=false"
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", raw, "-af", af, "-ar", str(SR), os.path.join(outdir, "audio.wav")], check=True)
     tl = {"fps": FPS, "duration": round(total, 3), "title": ep["title"], "hook": ep.get("hook", ""),
           "outro": ep.get("outro", ""), "beats": beats}
     json.dump(tl, open(os.path.join(outdir, "timeline.json"), "w"), ensure_ascii=False)
