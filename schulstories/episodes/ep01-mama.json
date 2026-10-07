@@ -1,0 +1,26 @@
+{
+  "title": "Ich hab meine Lehrerin MAMA genannt",
+  "hook": "Ich hab meine Lehrerin\n„MAMA“ genannt 💀",
+  "outro": "Teil 2? 👀",
+  "music": [["hook", "stille"], ["seitdem", "end"]],
+  "beats": [
+    {"id": "hook",    "voice": "toni",    "text": "Ich hab heute aus Versehen meine Lehrerin *Mama* genannt.", "gap": 0.25},
+    {"id": "notany",  "voice": "toni",    "text": "Nicht irgendeine Lehrerin.", "gap": 0.1, "sfx": [["whoosh", "end", -0.25]]},
+    {"id": "krause",  "voice": "toni",    "text": "*Frau Krause.*", "gap": 0.3, "sfx": [["dundun", "start", 0.0]]},
+    {"id": "mathe",   "voice": "toni",    "text": "*Mathe.*", "gap": 0.45, "sfx": [["thunder", "start", 0.0]]},
+    {"id": "meld",    "voice": "toni",    "text": "Ich meld mich also ganz normal und sag:", "gap": 0.1, "sfx": [["pop", "start", 0.5]]},
+    {"id": "klo",     "voice": "toni_scene", "text": "*Mama*, darf ich aufs Klo?", "gap": 0.35},
+    {"id": "stille",  "voice": "toni_whisper", "text": "Absolute Stille.", "gap": 0.35, "sfx": [["whoosh", "start", -0.3], ["cricket", "start", 0.3]]},
+    {"id": "uhr",     "voice": "toni",    "text": "Sogar die Uhr hat aufgehört zu ticken.", "gap": 0.0, "sfx": [["tick", "start", 0.0], ["tick", "start", 0.5], ["tick", "start", 1.0], ["tick", "start", 1.5]]},
+    {"id": "uhrgag",  "hold": 1.3, "sfx": [["boing", "start", 0.25], ["pop", "start", 0.3]]},
+    {"id": "retten",  "voice": "toni",    "text": "Also wollte ich es retten:", "gap": 0.05},
+    {"id": "papa",    "voice": "toni_panic", "text": "Äh, ich meine natürlich… *Papa!*", "say": "Äh, ich meine natürlich, Papa!", "gap": 0.6, "sfx": [["whoosh", "end", -0.55], ["scratch", "end", 0.02]]},
+    {"id": "guckt",   "voice": "toni",    "text": "Frau Krause guckt mich an. Ganz ruhig. Und sagt:", "gap": 0.3},
+    {"id": "schatz",  "voice": "krause",  "text": "Nein, *Schatz.* Erst wenn du aufgegessen hast.", "gap": 0.0, "sfx": [["rimshot", "end", 0.1]]},
+    {"id": "lach",    "hold": 1.6, "sfx": [["boing", "start", 0.5]]},
+    {"id": "seitdem", "voice": "toni",    "text": "Seitdem bin ich für die ganze Schule nur noch *Schatz.*", "gap": 0.15, "sfx": [["ding", "start", 0.0], ["pop", "start", 1.0], ["pop", "start", 1.7]]},
+    {"id": "hausm",   "voice": "toni",    "text": "Sogar für den Hausmeister.", "gap": 0.1, "sfx": [["whoosh", "start", -0.1]]},
+    {"id": "morgen",  "voice": "janitor", "text": "Morgen, *Schatz!*", "gap": 0.2},
+    {"id": "end",     "hold": 1.6}
+  ]
+}

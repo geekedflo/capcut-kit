@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: 'Luckiest Guy'; src: url(../fonts/luckiest-guy-latin-400-normal.woff2); }
+  @font-face { font-family: 'Fredoka'; font-weight: 700; src: url(../fonts/fredoka-latin-700-normal.woff2); }
+  @font-face { font-family: 'Inter'; font-weight: 900; src: url(../fonts/Inter-Black.otf); }
+  html, body { margin: 0; background: #000; overflow: hidden; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="core.js"></script>
+<script src="characters.js"></script>
+<script src="backgrounds.js"></script>
+<script>document.write('<script src="' + new URLSearchParams(location.search).get('ep') + '.js"><\/script>');</script>
+<script>
+function shotAt(t) {
+  let idx = 0;
+  SHOTS.forEach((s, i) => { if (t >= (i === 0 ? 0 : B[s.from].start)) idx = i; });
+  return [idx, idx === 0 ? 0 : B[SHOTS[idx].from].start];
+}
+
+function renderFrame(t) {
+  UID = 0;
+  const [idx, st] = shotAt(t);
+  const tt = t - st;
+  const r = SHOTS[idx].draw(t, tt);
+  const cam = Object.assign({ x: 540, y: 960, z: 1, rot: 0 }, r.cam);
+  if (!r.noPunch && idx > 0) cam.z *= 1 + 0.07 * (1 - Ease.outCubic(prog(tt, 0, 0.25)));
+  const blur = r.blur || 0;
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+  <defs>
+    <radialGradient id="vig" cx="50%" cy="45%" r="75%"><stop offset="62%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity="0.32"/></radialGradient>
+    <linearGradient id="redglow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF2A4A" stop-opacity="0"/><stop offset="1" stop-color="#FF2A4A" stop-opacity="0.8"/></linearGradient>
+    <filter id="blurx" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="${f1(blur)} 0"/></filter>
+    <radialGradient id="spot" cx="50%" cy="40%" r="50%"><stop offset="0" stop-color="#FFE7C2" stop-opacity="0.55"/><stop offset="1" stop-color="#FFE7C2" stop-opacity="0"/></radialGradient>
+    <filter id="gray"><feColorMatrix type="saturate" values="0.12"/></filter>
+  </defs>
+  <rect width="${W}" height="${H}" fill="#000"/>`;
+  const filt = blur > 0.5 ? 'url(#blurx)' : r.gray ? 'url(#gray)' : '';
+  svg += `<g ${filt ? `filter="${filt}"` : ''}><g transform="translate(540 960) rotate(${f1(cam.rot)}) scale(${cam.z.toFixed(4)}) translate(${f1(-cam.x)} ${f1(-cam.y)})">${r.world}</g></g>`;
+  if (r.tint) svg += `<rect width="${W}" height="${H}" fill="${r.tint}" opacity="${r.tintA}"/>`;
+  svg += `<rect width="${W}" height="${H}" fill="url(#vig)"/>`;
+  if (r.flash) svg += `<rect width="${W}" height="${H}" fill="#fff" opacity="${clamp(r.flash).toFixed(3)}"/>`;
+  if (r.screen) svg += r.screen;
+  svg += episodeOverlays(t);
+  svg += captions(t);
+  svg += '</svg>';
+  document.getElementById('root').innerHTML = svg;
+}
+</script>
+</body>
+</html>
