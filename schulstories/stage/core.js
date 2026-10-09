@@ -87,6 +87,7 @@ function buildCaptionChunks() {
 }
 
 function captions(t, y) {
+  if (TL.nocaptions) return '';
   y = y || 1265;
   const c = CHUNKS.find(c => t >= c.t0 && t < c.t1);
   if (!c) return '';

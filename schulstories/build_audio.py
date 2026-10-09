@@ -31,6 +31,7 @@ VOICES = {
     "ananas":       ("thorsten_emotional-medium", 6, 1.0, 1.13),
     "banane":       ("thorsten_emotional-medium", 0, 1.0, 1.2),
     "zitrone":      ("thorsten-high", 0, 0.84, 0.88),
+    "sprecher":     ("thorsten-high", 0, 1.02, 1.0),
 }
 
 _tts = {}
@@ -616,7 +617,7 @@ def main(ep_path):
     af = f"{pre},volume={-14 - lufs + 1.5:.2f}dB,aresample=176400,alimiter=limit=0.75:attack=2:release=60:level=false,aresample={SR}"
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", raw, "-af", af, "-ar", str(SR), os.path.join(outdir, "audio.wav")], check=True)
     tl = {"fps": FPS, "duration": round(total, 3), "title": ep["title"], "hook": ep.get("hook", ""),
-          "outro": ep.get("outro", ""), "beats": beats}
+          "outro": ep.get("outro", ""), "nocaptions": ep.get("nocaptions", False), "beats": beats}
     json.dump(tl, open(os.path.join(outdir, "timeline.json"), "w"), ensure_ascii=False)
     print(f"total {total:.2f}s -> {outdir}")
 

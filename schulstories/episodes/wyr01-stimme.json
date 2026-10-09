@@ -1,0 +1,31 @@
+{
+  "title": "Würdest du lieber (Stimme)",
+  "hook": "",
+  "outro": "",
+  "music": [],
+  "nocaptions": true,
+  "beats": [
+    {"id": "intro", "voice": "sprecher", "text": "Würdest du lieber? Sechs Fragen. Die letzte ist unmöglich.", "gap": 0.4},
+    {"id": "q1a", "voice": "sprecher", "text": "Würdest du lieber jeden Tag hundert Euro bekommen,", "q": ["💶", "Jeden Tag 100 €", "💰", "Sofort 1 Million €"], "gap": 0.15},
+    {"id": "q1b", "voice": "sprecher", "text": "oder sofort eine Million Euro?", "gap": 0.1},
+    {"id": "q1c", "hold": 3.0, "gap": 0.2},
+    {"id": "q2a", "voice": "sprecher", "text": "Ein Jahr lang kein Handy,", "q": ["📵", "1 Jahr kein Handy", "🥦", "1 Jahr nur Brokkoli essen"], "gap": 0.15},
+    {"id": "q2b", "voice": "sprecher", "text": "oder ein Jahr lang nur Brokkoli essen?", "gap": 0.1},
+    {"id": "q2c", "hold": 3.0, "gap": 0.2},
+    {"id": "q3a", "voice": "sprecher", "text": "Gedanken lesen können,", "q": ["🧠", "Gedanken lesen können", "👻", "Unsichtbar werden können"], "gap": 0.15},
+    {"id": "q3b", "voice": "sprecher", "text": "oder unsichtbar werden können?", "gap": 0.1},
+    {"id": "q3c", "hold": 3.0, "gap": 0.2},
+    {"id": "q4a", "voice": "sprecher", "text": "Alle hören deine Gedanken,", "q": ["🔊", "Alle hören deine Gedanken", "📱", "Alle sehen deinen Suchverlauf"], "gap": 0.15},
+    {"id": "q4b", "voice": "sprecher", "text": "oder alle sehen deinen Suchverlauf?", "gap": 0.1},
+    {"id": "q4c", "hold": 3.0, "gap": 0.2},
+    {"id": "q5a", "voice": "sprecher", "text": "Nie wieder Urlaub,", "q": ["✈️", "Nie wieder Urlaub", "🎮", "Nie wieder zocken"], "gap": 0.15},
+    {"id": "q5b", "voice": "sprecher", "text": "oder nie wieder zocken?", "gap": 0.1},
+    {"id": "q5c", "hold": 3.0, "gap": 0.2},
+    {"id": "q6x", "voice": "sprecher", "text": "Und jetzt die unmögliche Frage.", "gap": 0.4},
+    {"id": "q6a", "voice": "sprecher", "text": "Deine Mama liest alle deine Chats,", "q": ["👩", "Deine Mama liest alle deine Chats", "😳", "Dein Crush liest alle deine Chats"], "gap": 0.15},
+    {"id": "q6b", "voice": "sprecher", "text": "oder dein Crush liest alle deine Chats?", "gap": 0.1},
+    {"id": "q6c", "hold": 3.0, "gap": 0.2},
+    {"id": "outro", "voice": "sprecher", "text": "Schreib deine sechs Antworten in die Kommentare!", "gap": 0.0},
+    {"id": "end", "hold": 1.6}
+  ]
+}
