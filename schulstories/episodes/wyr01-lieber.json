@@ -1,0 +1,18 @@
+{
+  "title": "Würdest du lieber",
+  "hook": "Würdest du lieber…?",
+  "outro": "",
+  "music": [["intro", "end"]],
+  "music_style": "trap",
+  "music_gain": 0.16,
+  "beats": [
+    {"id": "intro", "hold": 2.2, "sfx": [["boom", "start", 0.05]]},
+    {"id": "q1", "hold": 7.2, "q": ["💶", "Jeden Tag 100 €", "💰", "Sofort 1 Million €"], "sfx": [["whoosh", "start", 0.0], ["pop", "start", 0.35], ["pop", "start", 0.85], ["tick", "start", 1.6], ["tick", "start", 2.6], ["tick", "start", 3.6], ["tick", "start", 4.6], ["tick", "start", 5.6], ["ding", "start", 6.5]]},
+    {"id": "q2", "hold": 7.2, "q": ["📵", "1 Jahr kein Handy", "🥦", "1 Jahr nur Brokkoli essen"], "sfx": [["whoosh", "start", 0.0], ["pop", "start", 0.35], ["pop", "start", 0.85], ["tick", "start", 1.6], ["tick", "start", 2.6], ["tick", "start", 3.6], ["tick", "start", 4.6], ["tick", "start", 5.6], ["ding", "start", 6.5]]},
+    {"id": "q3", "hold": 7.2, "q": ["🧠", "Gedanken lesen können", "👻", "Unsichtbar werden können"], "sfx": [["whoosh", "start", 0.0], ["pop", "start", 0.35], ["pop", "start", 0.85], ["tick", "start", 1.6], ["tick", "start", 2.6], ["tick", "start", 3.6], ["tick", "start", 4.6], ["tick", "start", 5.6], ["ding", "start", 6.5]]},
+    {"id": "q4", "hold": 7.2, "q": ["🔊", "Alle hören deine Gedanken", "📱", "Alle sehen deinen Suchverlauf"], "sfx": [["whoosh", "start", 0.0], ["pop", "start", 0.35], ["pop", "start", 0.85], ["tick", "start", 1.6], ["tick", "start", 2.6], ["tick", "start", 3.6], ["tick", "start", 4.6], ["tick", "start", 5.6], ["ding", "start", 6.5]]},
+    {"id": "q5", "hold": 7.2, "q": ["✈️", "Nie wieder Urlaub", "🎮", "Nie wieder zocken"], "sfx": [["whoosh", "start", 0.0], ["pop", "start", 0.35], ["pop", "start", 0.85], ["tick", "start", 1.6], ["tick", "start", 2.6], ["tick", "start", 3.6], ["tick", "start", 4.6], ["tick", "start", 5.6], ["ding", "start", 6.5]]},
+    {"id": "q6", "hold": 7.2, "q": ["👩", "Deine Mama liest alle deine Chats", "😳", "Dein Crush liest alle deine Chats"], "sfx": [["whoosh", "start", 0.0], ["pop", "start", 0.35], ["pop", "start", 0.85], ["tick", "start", 1.6], ["tick", "start", 2.6], ["tick", "start", 3.6], ["tick", "start", 4.6], ["tick", "start", 5.6], ["ding", "start", 6.5], ["hit", "start", 0.0], ["heartbeat", "start", 1.6]]},
+    {"id": "outro", "hold": 4.0, "sfx": [["boom", "start", 0.1]]}
+  ]
+}

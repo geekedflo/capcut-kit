@@ -573,6 +573,8 @@ def main(ep_path):
             voice_clips.append((t, y))
             print(f"{b['id']:8s} {t:6.2f}s  {dur:4.2f}s  {entry['text']}")
         entry["sfx"] = b.get("sfx", [])
+        if "q" in b:
+            entry["q"] = b["q"]
         beats.append(entry)
         t += dur + b.get("gap", 0)
     total = t
