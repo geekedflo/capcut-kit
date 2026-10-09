@@ -24,6 +24,13 @@ VOICES = {
     # youth style (ep02+): natural pitch, faster delivery
     "toni2":        ("thorsten-high", 0, 1.16, 1.03),
     "jonas":        ("thorsten_emotional-medium", 5, 0.85, 1.12),
+    # fruit drama (ep03+): calmer pacing, distinct pitches per character
+    "kiwi":         ("thorsten-high", 0, 1.0, 1.07),
+    "erdbeere":     ("kerstin-low", 0, 0.92, 1.1),
+    "ananas_wut":   ("thorsten_emotional-medium", 1, 1.05, 1.13),
+    "ananas":       ("thorsten_emotional-medium", 6, 1.0, 1.13),
+    "banane":       ("thorsten_emotional-medium", 0, 1.0, 1.2),
+    "zitrone":      ("thorsten-high", 0, 0.84, 0.88),
 }
 
 _tts = {}
@@ -325,11 +332,103 @@ def sfx_stamp():
     return 0.8 * (thud + 0.5 * slap) / 1.3
 
 
+def sfx_zipper():
+    """zip: accelerating tooth clicks over a little noise"""
+    n = int(0.5 * SR)
+    y = 0.08 * onepole_lp(rng.standard_normal(n), 3000) * np.linspace(0.3, 1, n)
+    t, step = 0.0, 0.022
+    while t < 0.46:
+        i = int(t * SR)
+        m = int(0.004 * SR)
+        y[i:i + m] += rng.standard_normal(m) * np.exp(-np.arange(m) / (0.0012 * SR))
+        t += step
+        step = max(0.006, step * 0.9)
+    y -= onepole_lp(y, 800)
+    return 0.7 * y / np.abs(y).max()
+
+
+def sfx_rewind():
+    """tape rewind: pitched noise sweeping, warbling"""
+    n = int(1.1 * SR)
+    t = np.arange(n) / SR
+    f = 400 + 2200 * (t / 1.1) ** 0.6 + 300 * np.sin(2 * np.pi * 9 * t)
+    tone = np.sign(np.sin(2 * np.pi * np.cumsum(f) / SR)) * 0.25
+    hiss = rng.standard_normal(n)
+    hiss -= onepole_lp(hiss, 2500)
+    y = (tone + 0.6 * hiss) * np.minimum(t / 0.05, 1) * np.minimum((1.1 - t) / 0.08, 1)
+    y = onepole_lp(y, 5000)
+    return 0.6 * y / np.abs(y).max()
+
+
+def sfx_beep():
+    """'play sound' chirps, muffled as if inside a bag, cut off abruptly"""
+    n = int(0.62 * SR)
+    t = np.arange(n) / SR
+    y = np.zeros(n)
+    for k, at in enumerate([0.0, 0.16, 0.32, 0.48]):
+        m = int(0.12 * SR)
+        tt = np.arange(m) / SR
+        f = 1500 + 400 * k
+        seg = np.sin(2 * np.pi * f * tt) * np.sin(np.pi * tt / 0.12)
+        i = int(at * SR)
+        y[i:i + m] += seg[: n - i]
+    y = onepole_lp(onepole_lp(y, 1100), 1100)
+    y[int(0.56 * SR):] *= np.linspace(1, 0, n - int(0.56 * SR)) ** 4
+    return 0.9 * y / np.abs(y).max()
+
+
+def sfx_heartbeat():
+    """three slow lub-dubs"""
+    y = np.zeros(int(2.6 * SR))
+    for b in range(3):
+        for off, g in [(0.0, 1.0), (0.22, 0.7)]:
+            m = int(0.16 * SR)
+            tt = np.arange(m) / SR
+            thump = np.sin(2 * np.pi * np.cumsum(48 + 40 * np.exp(-tt / 0.02)) / SR) * np.exp(-tt / 0.05)
+            i = int((b * 0.85 + off) * SR)
+            y[i:i + m] += g * thump
+    return 0.95 * np.tanh(1.8 * y)
+
+
+def sfx_haptic():
+    """phone vibration buzz"""
+    n = int(0.32 * SR)
+    t = np.arange(n) / SR
+    y = np.sign(np.sin(2 * np.pi * 165 * t)) * ((t < 0.12) | ((t > 0.18) & (t < 0.3)))
+    return 0.35 * onepole_lp(y.astype(float), 900)
+
+
+def sfx_door():
+    """door slammed open"""
+    n = int(0.9 * SR)
+    t = np.arange(n) / SR
+    thud = np.sin(2 * np.pi * np.cumsum(70 + 90 * np.exp(-t / 0.03)) / SR) * np.exp(-t / 0.12)
+    crack = rng.standard_normal(n) * np.exp(-t / 0.02)
+    crack = onepole_lp(crack, 3500)
+    rattle = rng.standard_normal(n) * np.exp(-t / 0.25) * 0.15
+    rattle -= onepole_lp(rattle, 1500)
+    y = thud + 0.6 * crack + rattle
+    return 0.9 * y / np.abs(y).max()
+
+
+def sfx_hit():
+    """dramatic orchestral hit: low brass + timpani"""
+    n = int(1.6 * SR)
+    t = np.arange(n) / SR
+    s = brass(73.4, 1.4) + 0.7 * brass(110, 1.4) + 0.5 * brass(146.8, 1.4)
+    y = np.zeros(n)
+    y[: len(s)] += s * np.exp(-np.arange(len(s)) / (0.5 * SR))
+    y += 2.0 * np.sin(2 * np.pi * np.cumsum(65 * np.exp(-t * 0.6)) / SR) * np.exp(-t / 0.4)
+    return 0.85 * y / np.abs(y).max()
+
+
 SFX = {
     "whoosh": (sfx_whoosh, 0.45), "pop": (sfx_pop, 0.55), "boing": (sfx_boing, 0.45),
     "thunder": (sfx_thunder, 0.6), "dundun": (sfx_dundun, 0.45), "scratch": (sfx_scratch, 0.55),
     "cricket": (sfx_cricket, 0.6), "tick": (sfx_tick, 0.5), "ding": (sfx_ding, 0.45),
     "rimshot": (sfx_rimshot, 0.6), "boom": (sfx_boom, 0.7), "msg": (sfx_msg, 0.5), "stamp": (sfx_stamp, 0.6),
+    "zipper": (sfx_zipper, 0.55), "rewind": (sfx_rewind, 0.5), "beep": (sfx_beep, 0.75), "heartbeat": (sfx_heartbeat, 0.6),
+    "haptic": (sfx_haptic, 0.5), "door": (sfx_door, 0.6), "hit": (sfx_hit, 0.55),
 }
 
 
@@ -429,6 +528,30 @@ def music_trap(dur, bpm=140):
     return y / np.abs(y).max()
 
 
+def music_suspense(dur, bpm=76):
+    """dark telenovela tension bed in D minor: drone pad, soft pulse, high tremolo"""
+    n = int((dur + 3) * SR)
+    t = np.arange(n) / SR
+    midi = lambda m: 440 * 2 ** ((m - 69) / 12)
+    pad = np.zeros(n)
+    for m, g in [(38, 1.0), (45, 0.6), (50, 0.5), (53, 0.35)]:
+        f = midi(m) * (1 + 0.002 * np.sin(2 * np.pi * 0.2 * t + m))
+        ph = 2 * np.pi * np.cumsum(f) / SR
+        pad += g * sum(np.sin(k * ph) / k for k in range(1, 7))
+    pad = onepole_lp(pad, 900) * (0.75 + 0.25 * np.sin(2 * np.pi * 0.11 * t))
+    beat = 60 / bpm
+    pulse = np.zeros(n)
+    for i in range(int(dur / beat) + 2):
+        m = int(0.3 * SR)
+        tt = np.arange(m) / SR
+        s = np.sin(2 * np.pi * np.cumsum(55 + 30 * np.exp(-tt / 0.03)) / SR) * np.exp(-tt / 0.12)
+        a = int(i * beat * SR)
+        pulse[a:a + m] += s[: max(0, n - a)]
+    trem = np.sin(2 * np.pi * midi(81) * t) * (0.5 + 0.5 * np.sin(2 * np.pi * 7 * t)) * (0.5 + 0.5 * np.sin(2 * np.pi * 0.07 * t))
+    y = pad / np.abs(pad).max() + 0.7 * pulse + 0.08 * trem
+    return y / np.abs(y).max()
+
+
 # ---------------------------------------------------------------- build
 def main(ep_path):
     ep = json.load(open(ep_path))
@@ -469,7 +592,7 @@ def main(ep_path):
             seg = s[: n - i]
             fx[i:i + len(seg)] += gain * seg
     mus = np.zeros(n)
-    m = music_trap(total) if ep.get("music_style") == "trap" else music(total)
+    m = {"trap": music_trap, "suspense": music_suspense}.get(ep.get("music_style"), music)(total)
     for a, z in ep.get("music", []):
         t0, t1 = byid[a]["start"], byid[z]["end"] if z != "end" else total
         i0, i1 = int(t0 * SR), int(t1 * SR)
@@ -488,7 +611,7 @@ def main(ep_path):
     pre = "acompressor=threshold=0.25:ratio=3:attack=5:release=120"
     meas = subprocess.run(["ffmpeg", "-nostats", "-i", raw, "-af", pre + ",ebur128", "-f", "null", "-"], capture_output=True, text=True).stderr
     lufs = float(re.findall(r"I:\s+(-?[\d.]+) LUFS", meas)[-1])
-    af = f"{pre},volume={-14 - lufs + 1.5:.2f}dB,alimiter=limit=0.75:attack=2:release=60:level=false"
+    af = f"{pre},volume={-14 - lufs + 1.5:.2f}dB,aresample=176400,alimiter=limit=0.75:attack=2:release=60:level=false,aresample={SR}"
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", raw, "-af", af, "-ar", str(SR), os.path.join(outdir, "audio.wav")], check=True)
     tl = {"fps": FPS, "duration": round(total, 3), "title": ep["title"], "hook": ep.get("hook", ""),
           "outro": ep.get("outro", ""), "beats": beats}
